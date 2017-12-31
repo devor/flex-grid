@@ -1,0 +1,35 @@
+@import "grid";
+
+$red: #dc143c;
+$blue: #1460aa;
+$green: #00a566;
+$orange: #e65722;
+$purple: #9b59b6;
+$teal: #1ba39c;
+
+.container {
+  background: rgba( $teal, .4);
+  padding: 1rem 0;
+}
+
+[class^="col"] {
+  height: 3rem;
+  background: $blue;
+
+  &:before {
+    content: attr(class);
+    line-height: 3rem;
+    width: 100%;
+    text-align: center;
+    color: white;
+  }
+
+
+}
+
+.row {
+  background: rgba($blue, .4);
+  + .row {
+    margin-top: 1rem;
+  }
+}

@@ -1,0 +1,283 @@
+/*******************************
+ *      DEVOR FLEX GRID        *
+ *******************************
+ */
+
+/*
+ * VARIABLES
+ */
+//## Define the breakpoints at which your layout will change, adapting to different screen sizes. (Mobile First)
+// Extra small screen / phone
+$screen-xs-min:                  480px !default;
+// Small screen / tablet
+$screen-sm-min:                  768px !default;
+// Medium screen / desktop
+$screen-md-min:                  992px !default;
+// Large screen / wide desktop
+$screen-lg-min:                  1200px !default;
+// So media queries don't overlap when required, provide a maximum
+$screen-xs-max:              ($screen-sm-min - 1) !default;
+$screen-sm-max:              ($screen-md-min - 1) !default;
+$screen-md-max:              ($screen-lg-min - 1) !default;
+
+/**
+ * Breakpoint examples
+ */
+
+// @media screen and (min-width: $screen-xs-min) {}
+// @media screen and (max-width: $screen-sm-max) {}
+// @media screen and (min-width: $screen-md-min and max-width: $screen-md-max) {}
+
+$grid-columns: 12;
+$grid-max-width: 87.5em;
+$grid-gutter: 1rem;
+$grid-sizes: (
+  'sm' : $screen-sm-min,
+  'md' : $screen-md-min,
+  'lg' : $screen-lg-min
+);
+
+/*
+ * PLACEHOLDERS
+ */
+
+// Flex containers usually live inside rows, are flexboxes, and have a max width.
+@mixin flex-row {
+  align-content: center;         // make all items in the container v align center, relative to the parent.
+  align-items: flex-start;       // valign items to top by default
+  display: flex;                 // use flexbox
+  flex-direction: row;           // treat it as rows not columns, ltr.
+  flex-wrap: wrap;               // let items wrap
+  justify-content: flex-start;   // make items left align by default
+  margin: 0 - ($grid-gutter/2);
+  width: calc(100% + $grid-gutter);
+}
+
+
+// These are row/flex modifiers
+@mixin flex-spaced {
+  justify-content: space-around;
+}
+
+@mixin flex-spread {
+  justify-content: space-between;
+}
+
+@mixin flex-valign-top {
+  align-items: flex-start;
+}
+
+@mixin flex-valign-middle {
+  align-items: center;
+}
+
+@mixin flex-valign-bottom {
+  align-items: flex-end;
+}
+
+@mixin flex-equal-heights {
+  align-items: stretch;
+}
+
+@mixin flex-align-left {
+  justify-content: flex-start;
+}
+
+@mixin flex-align-right {
+  justify-content: flex-end;
+}
+
+@mixin flex-align-center {
+  justify-content: center;
+}
+
+@mixin flex-full-width {
+  max-width: calc( 100% + $grid-gutter );
+}
+
+
+
+/*
+ Flex Column modifiers
+ */
+@mixin col-valign-top {
+  align-self: flex-start;
+}
+
+@mixin col-valign-bottom {
+  align-self: flex-end;
+}
+
+@mixin col-valign-middle {
+  align-self: center;
+}
+
+@mixin col-valign-stretch {
+  align-self: stretch;
+}
+
+
+/*
+ * MIXINS
+ */
+
+/**
+ * Defines a grid column based off of size, breakpoint, and total columns.
+ * @param   {number}  $size      -             Size of the column
+ * @param   {number}  $columns  $grid-columns  The total number of columns in row.
+ */
+@mixin flex-col($size, $columns: $grid-columns) {
+  $width: (100% / $columns * $size);
+  width: calc(#{$width} - #{$grid-gutter});
+  margin: 0 ($grid-gutter/2);
+  align-content: inherit;  
+  align-items: inherit;    
+  display: inherit;          
+  flex-direction: inherit;    
+  flex-wrap: inherit;        
+  justify-content: inherit;
+}
+
+
+/**
+ * Offset a grid column either left side or right side by a number of columns
+ * @param   {number}  $offset
+ * @param   {string}  $direction:  'left'
+ * @param   {number}  $columns:    $grid-columns
+ */
+@mixin offset($offset, $direction: 'left', $columns: $grid-columns) {
+  $dir: if($direction == 'left', 'left', 'right');
+
+  margin-#{$dir}: ($offset/$columns * 100%);
+}
+
+/*
+ * CLASSES
+ */
+
+// Containers hold rows
+.container {
+  margin: 0 auto;
+  max-width: $grid-max-width;
+  width: 100%;
+  padding: 0 $grid-gutter/2;
+
+  &--fluid {
+    max-width: inherit;
+  }
+}
+
+
+// Rows hold the columns
+.row {
+  @include flex-row;
+  text-align: left;
+
+  // modifiers
+  &--spaced {
+    @include flex-spaced;
+  }
+
+  &--spread {
+    @include flex-spread;
+  }
+
+  &--align-left {
+    @include flex-align-left;
+  }
+
+  &--align-right {
+    @include flex-align-right;
+  }
+
+  &--align-center {
+    @include flex-align-center;
+  }
+
+  &--valign-top {
+    @include flex-valign-top;
+  }
+
+  &--valign-middle {
+    @include flex-valign-middle;
+  }
+
+  &--valign-bottom {
+    @include flex-valign-bottom;
+  }
+
+  &--equal-heights {
+    @include flex-equal-heights
+  }
+  
+  // Child rows
+  .row {
+    // width: 100%;
+    // margin: 0;
+  }
+}
+
+
+// Columns
+.col {
+  // auto columns will fill the container, can give the element a min width.
+  &-auto,
+  &-xs-auto {
+    flex: auto;
+  }
+  
+  // Regular colums, xs are the same because everything is mobile first.
+  @for $i from 1 through $grid-columns {
+    &-xs-#{$i},
+    &-#{$i} {
+      @include flex-col($i);
+    }
+  }
+  @for $i from 1 through $grid-columns {
+    &-xs-offset-#{$i},
+    &-offset-#{$i} {
+      @include offset($i)
+    }
+    &-xs-offset-right-#{$i},
+    &-offset-right-#{$i} {
+      @include offset($i, 'right')
+    }
+  }
+
+  // Make a class for each breakpoint and each column wihtin that breakpoint ie: .col-lg-12
+  @each $size, $bp in $grid-sizes {
+    @media only screen and (min-width: #{$bp}) {
+      @for $i from 1 through $grid-columns {
+        &-#{$size}-#{$i} {
+          @include flex-col($i);
+        }
+        &-#{$size}-offset-#{$i} {
+          margin-left:  ($i/$grid-columns * 100%);
+        }
+        &-#{$size}-offset-right-#{$i} {
+          margin-right:  ($i/$grid-columns * 100%);
+        }
+      }
+      &-#{$size}-auto {
+        flex: auto;
+      }
+    }
+  }
+
+  // MODIFIERS -  Let any individual columns be vertically aligned by itself to the top or bottom.
+  &--valign-top {
+    @include col-valign-top;
+  }
+
+  &--valign-bottom {
+    @include col-valign-bottom;
+  }
+
+  &--valign-middle {
+    @include col-valign-middle;
+  }
+
+  &--flex-column {
+    flex-direction: column;
+  }
+}
