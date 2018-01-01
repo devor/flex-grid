@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
 @import "grid";
 
 $red: #dc143c;
@@ -7,29 +8,72 @@ $orange: #e65722;
 $purple: #9b59b6;
 $teal: #1ba39c;
 
-.container {
-  background: rgba( $teal, .4);
-  padding: 1rem 0;
+html {
+  font-family: 'Roboto', sans-serif;
 }
 
-[class^="col"] {
-  height: 3rem;
-  background: $blue;
+@mixin pseudo-label($content: "") {
+  @if ($content == "") {
+    $content: attr(class);
+  }
+  position: relative;
 
   &:before {
-    content: attr(class);
-    line-height: 3rem;
-    width: 100%;
-    text-align: center;
-    color: white;
+    content: $content;
+    position: absolute;
+    top: 0.125rem;
+    left: 0.125rem;
   }
-
-
 }
 
-.row {
-  background: rgba($blue, .4);
-  + .row {
+.container[styled] {
+  @include pseudo-label('.container');
+  background: rgba( $teal, .4);
+  padding: 2rem 0 1rem;
+  position: relative;
+
+  .row {
+    @include pseudo-label;
+    background: rgba($purple, .4);
+    padding: 2rem 0 1rem;
+
+    + .row {
+      margin-top: 1rem;
+    }
+  }
+
+  [class^="col"] {
+    @include pseudo-label;
+    background: rgba($blue, .5);
+    min-height: 3rem;
+  }
+}
+
+.container[alignment] {
+  [class^="col"] + [class^="col"] {
+    min-height: 6rem;
+  }
+}
+
+.container[nested] {
+  > .row > [class^="col"] {
+    padding: 2rem 0 1rem;
+  }
+}
+
+.container[responsive] {
+  [class^="col"] {
     margin-top: 1rem;
+  }
+}
+
+.container[advanced] {
+  .row + .row {
+    margin-top: 1rem;
+  }
+  .box {
+    min-height: 3rem;
+    background: rgba($red, .6);
+    max-height: 100%;
   }
 }
