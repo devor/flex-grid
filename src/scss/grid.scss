@@ -4,7 +4,7 @@
  */
 
 $grid-columns: 12 !default;
-$grid-max-width: 87.5em !default;
+$grid-max-width: 87.5rem !default;
 $grid-gutter: 1rem !default;
 $grid-sizes: (
   'sm' : 768px,
@@ -61,7 +61,7 @@ $grid-sizes: (
 @mixin offset($offset, $direction: 'left', $columns: $grid-columns) {
   $dir: if($direction == 'left', 'left', 'right');
 
-  margin-#{$dir}: ($offset/$columns * 100%);
+  margin-#{$dir}: calc(#{($offset/$columns * 100%)} + #{($grid-gutter / 2)});
 }
 
 /*

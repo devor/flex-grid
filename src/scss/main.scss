@@ -27,7 +27,7 @@ html {
 }
 
 .container[styled] {
-  @include pseudo-label('.container');
+  @include pseudo-label;
   background: rgba( $teal, .4);
   padding: 2rem 0 1rem;
   position: relative;
